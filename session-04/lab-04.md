@@ -140,14 +140,12 @@ console.log(5e10); // output is 50000000000
 
 We encode much of our geographic data either as text (i.e., string types) or numbers (i.e., numerical or number types). This distinction may seem simple and obvious now, but can wreak havoc if you are not careful. So, always pay attention to the type of your data! 
 
-One other value we use frequently when programming: that of the **Boolean** (or Logical) type which is used to represent either true (1) or false (0). This means the terms true and false have special meaning in JavaScript and if include them without quotes they will be treated as a statement rather than an error. Try the statement below:
+One other value we use frequently when programming: that of the **Boolean** (or Logical) type which is used to represent either true (1) or false (0). This means the terms true and false have special meaning in JavaScript and if include them without quotes they will be treated as a statement rather than an error. Try the statements below:
 
 ```javascript
 console.log(true);
 console.log(false);
 ```
-These examples aren't very exciting, but we'll be exploring more practical examples using sBoolean values more in the next section.
->>>>>>> Stashed changes
 
 ```javascript
 console.log(true); // OK even WITHOUT quotes because this is Boolean (not text) type
