@@ -78,6 +78,10 @@
     <script>
         var map;
         var targetDiv = 'map';
+        
+        function numCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        };
 
         var options = {
             center: [38.0489,-84.5025],
@@ -117,7 +121,8 @@
         
         // city1 marker code
         var city1Popup = "<b>"+city1Name+"</b><br>"
-                        +"<b>Population</b>: "+city1Pop;
+                        +"<b>Population</b>: "+numCommas(city1Pop);
+
         
         if(city1Capitol == true) {
             city1Popup += "<br>Capitol of the Commonwealth of Kentucky";   
@@ -128,7 +133,7 @@
         
 
         var city2Popup = "<b>"+city2Name+"</b><br>"
-                        +"<b>Population</b>: "+city2Pop;
+                        +"<b>Population</b>: "+numCommas(city2Pop);
         
         if(city2Capitol == true) {
             city2Popup += "<br>Capitol of the Commonwealth of Kentucky";   
@@ -138,7 +143,7 @@
             .bindPopup(city2Popup);
         
         var city3Popup = "<b>"+city3Name+"</b><br>"
-                        +"<b>Population</b>: "+city3Pop;
+                        +"<b>Population</b>: "+numCommas(city3Pop);
         
         if(city3Capitol == true) {
             city3Popup += "<br>Capitol of the Commonwealth of Kentucky";   
