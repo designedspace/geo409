@@ -85,7 +85,6 @@
         });
         map.addLayer(tiles);
         
-        // begin writing/editing Task D code here
         var cities = ["Lexington","Frankfort","&#304zmir, TR"];
         var cityCoords = [
             [38.0297,-84.4947],
@@ -95,21 +94,20 @@
         var cityPops = [308428,27453,4005459];
         var cityCapitol = ["false","true","false"];
 
-        for(var i=0; i < cities.lenth; i++) {
+        for(var i=0; i < cities.length; i++) {
             
             var popup = "<b>"+cities[i]+"</b><br>"
                             +"<b>Population</b>: "+cityPops[i];
 
             if(cityCapitol[i] == true) {
-               
                 popup += "<br>Capitol of the Commonwealth of Kentucky"; 
-                
             } 
             
             L.marker(cityCoords[i]).addTo(map)
                 .bindPopup(popup);
         }
         
+        map.fitBounds(cityCoords);
           
     </script>
     
