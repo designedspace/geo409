@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8 />
+    <title>Geo409 Task C</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+   <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: whitesmoke;
+            font-family: Lato, sans-serif;
+            color: #0D0000;
+        }
+        header {
+            padding: 6px 10%;
+        }
+        h1 {
+            display: inline-block;
+            margin-right: 20px;
+            color: #001323;
+        }
+        h2 {
+            display: inline-block;
+            color: #7e7e7e;
+        }
+        h3 {
+            color: #7e7e7e;
+        }
+        #map {
+            width: 80%;
+            height: 400px;
+            margin: 10px auto;
+        }
+        footer {
+            padding: 6px 10%;
+            width: 80%;
+        }
+        p {
+            font-size: 0.9em;
+            color: #001323;
+        }
+        p.author-info {
+            font-style: italic;
+            text-align: right;
+            font-size: 0.7em;
+        }
+        a {
+            color: #7e7e7e;
+            font-weight:bold;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>KenTurkey</h1>
+        <h2>Mapping (Trans)national Subjecturkeyties</h2>
+    </header>
+
+    <div id='map'></div>
+
+    <footer>
+        <p class='author-info'>Map authored by Eric Huntley</p>
+        <h3>About This Map</h3>
+        <p>Like a gourmet at a wine tasting, you sample different varieties of boredom.</p>
+        <h3>Data Sources</h3>
+        <p>Source code available at <a target=_blank href="https://github.com/designedspace/geo409">GitHub.</a></p>
+    </footer>
+
+    <script>
+        var map;
+        var targetDiv = 'map';
+        
+        function numCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        };
+
+        var options = {
+            center: [38.0489,-84.5025],
+            zoom: 8
+        }
+        map = L.map(targetDiv, options);
+        var tiles = L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-hillshading/{z}/{x}/{y}.png', {
+            attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth',
+            subdomains: '0123',
+            minZoom: 2,
+            maxZoom: 18
+        });
+        map.addLayer(tiles);
+        
+        var city1Name = "Lexington";
+        var city1Lat = 38.0297;
+        var city1Lon = -84.4947;
+        var city1Pop = 308428;
+        var city1Capitol = false;
+        
+        var city2Name = "Frankfort";
+        var city2Lat = 38.1970;
+        var city2Lon = -84.8630;
+        var city2Pop = 27453;
+        var city2Capitol = true;
+        
+        var city3Name = "&#304zmir, TR";
+        var city3Lat = 38.4220;
+        var city3Lon = 27.1290;
+        var city3Pop = 4005459;
+        var city3Capitol = false;
+        
+        var totalPop = city1Pop + city2Pop +city3Pop;
+        console.log(totalPop);
+        var averagePop = totalPop/3;
+        console.log(averagePop);
+        
+        // city1 marker code
+        var city1Popup = "<b>"+city1Name+"</b><br>"
+                        +"<b>Population</b>: "+numCommas(city1Pop);
+
+        
+        if(city1Capitol == true) {
+            city1Popup += "<br>Capitol of the Commonwealth of Kentucky";   
+        }
+        
+        var city1Mark = L.marker([city1Lat,city1Lon]).addTo(map)
+            .bindPopup(city1Popup);
+        
+
+        var city2Popup = "<b>"+city2Name+"</b><br>"
+                        +"<b>Population</b>: "+numCommas(city2Pop);
+        
+        if(city2Capitol == true) {
+            city2Popup += "<br>Capitol of the Commonwealth of Kentucky";   
+        }
+        
+        var city2Mark = L.marker([city2Lat,city2Lon]).addTo(map)
+            .bindPopup(city2Popup);
+        
+        var city3Popup = "<b>"+city3Name+"</b><br>"
+                        +"<b>Population</b>: "+numCommas(city3Pop);
+        
+        if(city3Capitol == true) {
+            city3Popup += "<br>Capitol of the Commonwealth of Kentucky";   
+        }
+        
+        var city3Mark = L.marker([city3Lat,city3Lon]).addTo(map)
+            .bindPopup(city3Popup);
+        
+        var cities = new L.featureGroup([city1Mark,city2Mark,city3Mark]);
+        map.fitBounds(cities.getBounds());
+        
+    </script>
+    
+</body>
+
+</html>
