@@ -95,12 +95,12 @@
         var cityPops = [308428,27453,4005459];
         var cityCapitol = ["false","true","false"];
 
-        for() {
+        for(var i=0; i < cities.lenth; i++) {
             
-            var popup = "<b>"+/* add code here */+"</b><br>"
-                            +"<b>population</b>: "+/* add code here */;
+            var popup = "<b>"+cities[i]+"</b><br>"
+                            +"<b>Population</b>: "+cityPops[i];
 
-            if(/* add code here */ == true) {
+            if(cityCapitol[i] == true) {
                
                 popup += "<br>Capitol of the Commonwealth of Kentucky"; 
                 
@@ -109,8 +109,6 @@
             L.marker(cityCoords[i]).addTo(map)
                 .bindPopup(popup);
         }
-        
-        // end writing/editing Task D code here
         
           
     </script>
