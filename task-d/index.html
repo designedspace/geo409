@@ -78,6 +78,10 @@
     <script>
         var map;
         var targetDiv = 'map';
+        
+        function numCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        };
 
         var options = {
             center: [38.0489,-84.5025],
@@ -104,7 +108,7 @@
         for(var i=0; i < cities.length; i++) {
             
             var popup = "<b>"+cities[i]+"</b><br>"
-                            +"<b>Population</b>: "+cityPops[i];
+                            +"<b>Population</b>: "+numCommas(cityPops[i]);
 
             if(cityCapitol[i] == true) {
                 popup += "<br>Capitol of the Commonwealth of Kentucky"; 
