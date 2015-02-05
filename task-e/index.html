@@ -138,7 +138,8 @@
         function calcPopDensity(pop,area,units) {
             var density = pop / area;
             if (units == 'miles') return density;
-            if (units == 'km') return density * 2.58999;
+            else if (units == 'km') return density * 2.58999;
+            else return 'units undefined';
             return density;
         }
 
