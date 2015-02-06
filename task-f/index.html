@@ -29,7 +29,10 @@
         }
         h2 {
             display: inline-block;
-            color: #001323;
+            color: #7e7e7e;
+        }
+        h3 {
+            color: #7e7e7e;
         }
         #map {
             width: 80%;
@@ -43,6 +46,15 @@
         p {
             font-size: 1em;
             color: #001323;
+        }
+        p.author-info {
+            font-style: italic;
+            text-align: right;
+            font-size: 0.7em;
+        }
+        a {
+            color: #7e7e7e;
+            font-weight:bold;
         }
         /* Additional style rules go here! */
         
@@ -62,17 +74,18 @@
 
 <body>
     <header>
-        <h1>Map Title</h1>
-        <h2>Map Subtitle</h2>
+        <h1>Cities</h1>
+        <h2>These Are Some.</h2>
     </header>
 
     <div id='map'></div>
 
     <footer>
-        <p>Map authored by YOUR NAME</p>
-        <p>Additional information about the data and map goes here.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis urna magna, maximus nec laoreet sit amet, dictum ultricies nibh. Ut id auctor lacus. Nam a dolor et justo luctus luctus. Duis a elit eget risus dictum vehicula id eu elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed sed enim nisl. Vestibulum commodo imperdiet lacus, sed facilisis erat placerat sit amet. Nulla consequat malesuada neque eget aliquet. Integer non convallis nisl, gravida ultrices ex. Fusce nec vestibulum elit. Sed elementum lectus ipsum, vulputate elementum ex laoreet a. Aenean eu ex varius, varius felis vitae, efficitur nulla. Quisque pretium laoreet ante, in sodales dui vehicula at. Mauris eu sem sapien.
-        </p>
+        <p class='author-info'>Map authored by Eric Huntley</p>
+        <h3>About This Map</h3>
+        <p>Like a gourmet at a wine tasting, you sample different varieties of boredom.</p>
+        <h3>Data Sources</h3>
+        <p>Source code available at <a target=_blank href="https://github.com/designedspace/geo409">GitHub.</a></p>
     </footer>
 
     <script>
@@ -93,15 +106,50 @@
         // Begin writing/modifying code for Task F here
         
         var cities = [
-             {
-                 name: "Louisville",
-                 properties: {
-                     coordinates: [38.25, -85.7667],
-                     population: 756832,
-                     state: "KY"
-                 }
-             }    
+            {
+                name: "Louisville",
+                properties: {
+                    coordinates: [38.25, -85.7667],
+                    population: 756832,
+                    state: "KY"
+                }
+            },
+            {
+                name: "Dick Johnson Township",
+                properties: {
+                    coordinates: [39.5647, -87.1636],
+                    population: 1453,
+                    state: "IN"
+                }
+            },
+            {
+                name: "Pee Pee",
+                properties: {
+                    coordinates: [39.1231, -83.0008],
+                    population: 756832,
+                    state: "OH"
+                }
+            }
         ];
+        
+        function buildPopup(name,pop,state) {
+            if (state == "KY") var colorClass = "blue";
+            else if (state == "IN") var colorClass = "red";
+            else var colorClass = "purple";
+            
+            return "<div class='"+colorClass+"'><b>"+name+"</b><br>"
+            +"<b>Population</b>: "+pop.toLocaleString()+"<div>";
+        }
+        
+        for (var i = 0; i < cities.length; i++) {
+            var props = cities[i].properties;
+            L.marker(props.coordinates).addTo(map)
+                .bindPopup(buildPopup(cities[i].name,props.population,props.state));
+        }
+        
+        //console.log(cities[0].properties.coordinates);
+        //map.fitBounds(cities.properties.coordinates,{padding:[15,15]});
+        
             
         // End code for Task F
         
