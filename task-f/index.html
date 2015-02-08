@@ -67,6 +67,9 @@
         .purple {
             color: #b6165b; 
         }
+        .magenta {
+            color: #ff00ff;    
+        }
         
 
     </style>
@@ -115,18 +118,18 @@
                 }
             },
             {
-                name: "Dick Johnson Township",
+                name: "Muncie",
                 properties: {
-                    coordinates: [39.5647, -87.1636],
-                    population: 1453,
+                    coordinates: [40.1933, -85.3881],
+                    population: 70316,
                     state: "IN"
                 }
             },
             {
-                name: "Pee Pee",
+                name: "Marion",
                 properties: {
-                    coordinates: [39.1231, -83.0008],
-                    population: 756832,
+                    coordinates: [40.5867, -83.1264],
+                    population: 36772,
                     state: "OH"
                 }
             }
@@ -135,21 +138,22 @@
         function buildPopup(name,pop,state) {
             if (state == "KY") var colorClass = "blue";
             else if (state == "IN") var colorClass = "red";
-            else var colorClass = "purple";
+            else var colorClass = "magenta";
             
             return "<div class='"+colorClass+"'><b>"+name+"</b><br>"
             +"<b>Population</b>: "+pop.toLocaleString()+"<div>";
         }
         
+        var coordsList = [];
+        
         for (var i = 0; i < cities.length; i++) {
             var props = cities[i].properties;
             L.marker(props.coordinates).addTo(map)
                 .bindPopup(buildPopup(cities[i].name,props.population,props.state));
+            coordsList.push(props.coordinates);
         }
         
-        //console.log(cities[0].properties.coordinates);
-        //map.fitBounds(cities.properties.coordinates,{padding:[15,15]});
-        
+        map.fitBounds(coordsList, {padding:[50,50]});
             
         // End code for Task F
         
