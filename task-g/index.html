@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8 />
+    <title>Geo409 Task G Starter</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: black;
+            color: #0D0000;
+        }
+        header {
+            padding: 6px 10%;
+            text-align: center
+        }
+        h1 {
+            font-family: "HelveticaNeueBold", "HelveticaNeue-Bold", "Helvetica Neue Bold", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosBold', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif; 
+            font-weight:600; 
+            font-stretch:normal;
+            display: inline-block;
+            color: #FFFFFF;
+        }
+        
+        h2 {
+	        font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
+            font-weight:100;
+            font-size: 1em;
+            font-style: italic;
+            display: inline-block;
+            color: #CCC;
+            margin-top: 1.5em;
+            margin-bottom: 1.25em;
+        }
+        
+        h3 {
+            font-family: "HelveticaNeueBold", "HelveticaNeue-Bold", "Helvetica Neue Bold", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosBold', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif; 
+            font-weight:600; 
+            font-stretch:normal;
+            /*font-style: italic;*/
+            display: inline-block;
+            color: #FFF;
+        }
+        
+        #map {
+            width: 100%;
+            height: 400px;
+            margin: auto;
+        }
+        footer {
+            text-align:center;
+            padding: 6px 30%;
+            width: 40%;
+        }
+        hr {
+            noshade;
+            margin-top: 0em;
+            margin-bottom: 0em;
+            width: 25%
+        }
+        p {
+	        font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
+            font-weight:100;
+            font-size: 1em;
+            font-style: italic;
+            color: #CCC;
+            text-align:left;
+        }
+        p.license{
+            text-align:center;
+            font-size: 0.75em;
+            margin-top: 3em;
+        }
+        a {
+            color: #777;
+            font-weight:bold;
+        }
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Red Iguanas</h1><hr>
+        <h2>Aren't ever far away</h2>
+    </header>
+
+    <div id='map'></div>
+
+    <footer>
+        <h3>About This Map</h3>
+        <p>
+[P]ower and wealth... are the basis of beauty. This is why the rebel and the anarchic protester who decries all of history and all the works of past centuries because he sees in them only the skills and the threat of domination is making a mistake. He sees alienated forms, but not the greatness within. ... [R]eal greatness shines through the fake grandeour of rulers and endows these buildings with a lasting ‘beauty’. The bourgeoisie is alone in having given its buildings a single, over-obvious meaning, impoverished, deprived of reality: that meaning is abstract wealth and brutal domination; that is why it has succeeded in producing perfect ugliness and perfect vulgarity. The man who denigrates the past, and who nearly always denigrates the present and the future as well, cannot understand this dialectic of art, this dual character of works and of history.
+        </p>
+        
+        <p class = 'license'><a href="https://github.com/designedspace/geo409" target="_blank"><img src="http://asap.github.io/flask-nyc/testing-selenium-jasmine/img/github.png" style="border-width:0;height:31px;margin-right:0.5em;" /></a><a href="http://creativecommons.org/licenses/by/4.0/" target="_blank"><img alt="Creative Commons License" style="margin-left:0.5em;" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a></p>
+    </footer>
+
+    <script>
+        
+    var tileLayer_BG = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', {
+	   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+	   subdomains: 'abcd',
+	   minZoom: 0,
+	   maxZoom: 18
+    });
+        
+    var options = {
+        center: [40,-94],
+        zoom: 4,
+        minZoom: 4,
+        maxZoom: 12,
+        zoomControl: false
+    }
+
+    var map = L.map('map', options);
+        
+    map.addLayer(tileLayer_BG);
+                
+    var redIguana = L.latLng(40.7718,-111.9124);
+        
+    map.on('click', function(e){
+        var click = e.latlng;
+        var click2Iguana = click.distanceTo(redIguana);
+        console.log(click2Iguana);
+        
+        var bounds = map.getBounds();
+        var swCorner = bounds.getSouthWest();
+        var swCor2Iguana = swCorner.distanceTo(redIguana);
+        console.log(swCor2Iguana);
+    });
+                  
+    </script>
+    
+</body>
+
+</html>
