@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8 />
+    <title>Map 1 starter</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: whitesmoke;
+            font-family: Lato, sans-serif;
+            color: #0D0000;
+        }
+        header {
+            padding: 6px 10%;
+        }
+        h1 {
+            display: inline-block;
+            margin-right: 20px;
+            color: #001323;
+        }
+        h2 {
+            display: inline-block;
+            color: #001323;
+        }
+        #map {
+            width: 80%;
+            height: 540px;
+            margin: 10px auto;
+        }
+        footer {
+            padding: 6px 10%;
+            width: 80%;
+        }
+        p {
+            font-size: 1em;
+            color: #001323;
+        }
+        /* Additional style rules go here! */
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Map Title</h1>
+        <h2>Map Subtitle</h2>
+    </header>
+
+    <div id='map'></div>
+
+    <footer>
+        
+// steps and 11 and 12 below        
+        
+    </footer>
+
+    <script>
+    var map;
+    var targetDiv = 'map';
+        
+    var southWest = L.latLng(-38.9765, 141.4106),
+        northEast = L.latLng(-36.6332, 148.5132),
+        bounds = L.latLngBounds(southWest, northEast);
+        
+    var options = {
+        center: [-37.8136,144.9631],
+        zoom: 10,
+        minZoom: 8,
+        maxZoom: 12,
+        zoomControl: false,
+        maxBounds: bounds
+    };
+        
+    var map = L.map(targetDiv, options);
+        
+    var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', {
+	   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+	   subdomains: 'abcd',
+	   minZoom: 0,
+	   maxZoom: 18
+    });
+        
+    map.addLayer(tiles);
+        
+        var iguanaZones = [
+            {
+                name: 'lz1',
+                coordinates: [-37.854506, 144.797431],
+                properties: {
+                    size: 1850
+                }
+            },
+            {
+                name: 'lz2',
+                coordinates: [-37.749253, 144.855108],
+                properties: {
+                    size: 2500
+                }
+            },
+            {
+                name: 'lz3',
+                coordinates: [-37.770967, 144.943686],
+                properties: {
+                    size: 2150
+                }
+            },
+            {
+                name: 'lz4',
+                coordinates: [-37.720472, 145.002051],
+                properties: {
+                    size: 2000
+                }
+            },
+            {
+                name: 'lz5',
+                coordinates: [-37.774767, 145.033635],
+                properties: {
+                    size: 2500
+                }
+            },
+            {
+                name: 'lz6',
+                coordinates: [-37.827394, 145.040503],
+                properties: {
+                    size: 2350
+                }
+            },
+            {
+                name: 'lz7',
+                coordinates: [-37.767711, 145.116720],
+                properties: {
+                    size: 1100
+                }
+            },
+            {
+                name: 'lz8',
+                coordinates: [-37.829563, 145.129767],
+                properties: {
+                    size: 1450
+                }
+            },
+            {
+                name: 'lz9',
+                coordinates: [-37.779108, 145.749365],
+                properties: {
+                    size: 950
+                }
+            },
+            {
+                name: 'lz10',
+                coordinates: [-37.868059, 145.0714022],
+                properties: {
+                    size: 2000
+                }
+            },
+            {
+                name: 'lz11',
+                coordinates: [-37.932565, 145.080328],
+                properties: {
+                    size: 1700
+                }
+            },
+            {
+                name: 'lz12',
+                coordinates: [-37.873479, 145.1963717],
+                properties: {
+                    size: 1200
+                }
+            }
+        ];
+        
+        var iguanaLayer = L.layerGroup();
+        
+        for (var i = 0; i < iguanaZones.length; i++) {
+            var zoneCircles = L.circle(iguanaZones[i].coordinates,iguanaZones[i].properties.size);
+            iguanaLayer.addLayer(zoneCircles);
+        }
+        
+        iguanaLayer.addTo(map);
+        
+        map.on('click', function(e) {
+            var click = e.latlng;
+            
+            iguanaLayer.eachLayer(function (layer) {
+                var dist = click.distanceTo(layer.getLatLng()) - layer.getRadius();
+                console.log(dist);
+                if (dist <= 0) {
+                    layer.setStyle( {color: '#ff0000'} );
+                }
+            });
+        
+        console.log(map.getBounds());
+            
+        });
+        
+    </script>
+    
+</body>
+
+</html>

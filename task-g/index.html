@@ -76,7 +76,7 @@
             text-align:left;
         }
         p.license{
-            text-align:center;
+            text-align: center;
             font-size: 0.75em;
             margin-top: 3em;
         }
@@ -102,16 +102,14 @@
 [P]ower and wealth... are the basis of beauty. This is why the rebel and the anarchic protester who decries all of history and all the works of past centuries because he sees in them only the skills and the threat of domination is making a mistake. He sees alienated forms, but not the greatness within. ... [R]eal greatness shines through the fake grandeour of rulers and endows these buildings with a lasting ‘beauty’. The bourgeoisie is alone in having given its buildings a single, over-obvious meaning, impoverished, deprived of reality: that meaning is abstract wealth and brutal domination; that is why it has succeeded in producing perfect ugliness and perfect vulgarity. The man who denigrates the past, and who nearly always denigrates the present and the future as well, cannot understand this dialectic of art, this dual character of works and of history.
         </p>
         
-        <p class = 'license'><a href="https://github.com/designedspace/geo409" target="_blank"><img src="http://asap.github.io/flask-nyc/testing-selenium-jasmine/img/github.png" style="border-width:0;height:31px;margin-right:0.5em;" /></a><a href="http://creativecommons.org/licenses/by/4.0/" target="_blank"><img alt="Creative Commons License" style="margin-left:0.5em;" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a></p>
+        <p class = 'license'>
+            <a href="https://github.com/designedspace/geo409" target="_blank">
+                <img src="http://asap.github.io/flask-nyc/testing-selenium-jasmine/img/github.png" style="border-width:0;height:31px;margin-right:0.5em;" /></a><a href="http://creativecommons.org/licenses/by/4.0/" target="_blank"><img alt="Creative Commons License" style="margin-left:0.5em;" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a></p>
     </footer>
 
-    <script> 
-    var tileLayer_BG = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', {
-	   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-	   subdomains: 'abcd',
-	   minZoom: 0,
-	   maxZoom: 18
-    });
+    <script>
+    var map;
+    var targetDiv = 'map';
         
     var options = {
         center: [40,-94],
@@ -119,30 +117,41 @@
         minZoom: 4,
         maxZoom: 12,
         zoomControl: false
-    }
-
-    var map = L.map('map', options);
+    };
+    
+    var map = L.map(targetDiv, options);
         
-    map.addLayer(tileLayer_BG);
+    var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', {
+	   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+	   subdomains: 'abcd',
+	   minZoom: 0,
+	   maxZoom: 18
+    });
+    
+    map.addLayer(tiles);
                 
     var redIguana = L.latLng(40.7718,-111.9124);
         
     map.on('click', function(e){
         var click = e.latlng;
+//        map.setView(click, 6);
         var click2Iguana = click.distanceTo(redIguana);
         console.log(click2Iguana);
         
+        var distance = (3200000 - click2Iguana)/3200000;
+        console.log(distance);
+        
         var circleOptions = {
-            radius: 8,
-            weight:2, 
-            opacity: 0.9,
-            fillOpacity: 0.3,
+            radius: 12,
+            weight:2,
+            fillOpacity: 0,
             className: "fadeCircle",
             clickable: false
         }
         
         var clickCircle = L.circleMarker(click, $.extend({}, circleOptions, {
             color: '#ffffff',
+            opacity: 0.9 * distance,
             fillColor: '#ffffff'
         }));
         
@@ -160,15 +169,13 @@
         var swCor2Iguana = swCorner.distanceTo(redIguana);
         console.log(swCor2Iguana);
         
-        setTimeout(function(){
-            $(".fadeCircle").animate({ opacity: 0 }, 400, function() {layer.clearLayers();});
-        }, 150);
-        
-        
+        $(".fadeCircle").animate({ fillOpacity: 0.3 * distance }, 20, function() {
+            setTimeout(function(){
+                $(".fadeCircle").animate({ opacity: 0 }, 400, function() {layer.clearLayers();});
+            }, 150);
+        });
     });
-        
-    
-                  
+             
     </script>
     
 </body>
