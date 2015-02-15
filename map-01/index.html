@@ -83,124 +83,159 @@
         
     var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', {
 	   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-	   subdomains: 'abcd',
-	   minZoom: 0,
-	   maxZoom: 18
+	   subdomains: 'abcd'
     });
         
     map.addLayer(tiles);
         
-        var iguanaZones = [
-            {
-                name: 'lz1',
-                coordinates: [-37.854506, 144.797431],
-                properties: {
-                    size: 1850
-                }
-            },
-            {
-                name: 'lz2',
-                coordinates: [-37.749253, 144.855108],
-                properties: {
-                    size: 2500
-                }
-            },
-            {
-                name: 'lz3',
-                coordinates: [-37.770967, 144.943686],
-                properties: {
-                    size: 2150
-                }
-            },
-            {
-                name: 'lz4',
-                coordinates: [-37.720472, 145.002051],
-                properties: {
-                    size: 2000
-                }
-            },
-            {
-                name: 'lz5',
-                coordinates: [-37.774767, 145.033635],
-                properties: {
-                    size: 2500
-                }
-            },
-            {
-                name: 'lz6',
-                coordinates: [-37.827394, 145.040503],
-                properties: {
-                    size: 2350
-                }
-            },
-            {
-                name: 'lz7',
-                coordinates: [-37.767711, 145.116720],
-                properties: {
-                    size: 1100
-                }
-            },
-            {
-                name: 'lz8',
-                coordinates: [-37.829563, 145.129767],
-                properties: {
-                    size: 1450
-                }
-            },
-            {
-                name: 'lz9',
-                coordinates: [-37.779108, 145.749365],
-                properties: {
-                    size: 950
-                }
-            },
-            {
-                name: 'lz10',
-                coordinates: [-37.868059, 145.0714022],
-                properties: {
-                    size: 2000
-                }
-            },
-            {
-                name: 'lz11',
-                coordinates: [-37.932565, 145.080328],
-                properties: {
-                    size: 1700
-                }
-            },
-            {
-                name: 'lz12',
-                coordinates: [-37.873479, 145.1963717],
-                properties: {
-                    size: 1200
-                }
+    var iguanaZones = [
+        {
+            name: 'lz1',
+            coordinates: [-37.854506, 144.797431],
+            properties: {
+                size: 1850
             }
-        ];
-        
-        var iguanaLayer = L.layerGroup();
-        
-        for (var i = 0; i < iguanaZones.length; i++) {
-            var zoneCircles = L.circle(iguanaZones[i].coordinates,iguanaZones[i].properties.size);
-            iguanaLayer.addLayer(zoneCircles);
+        },
+        {
+            name: 'lz2',
+            coordinates: [-37.749253, 144.855108],
+            properties: {
+                size: 2500
+            }
+        },
+        {
+            name: 'lz3',
+            coordinates: [-37.770967, 144.943686],
+            properties: {
+                size: 2150
+            }
+        },
+        {
+            name: 'lz4',
+            coordinates: [-37.720472, 145.002051],
+            properties: {
+                size: 2000
+            }
+        },
+        {
+            name: 'lz5',
+            coordinates: [-37.774767, 145.033635],
+            properties: {
+                size: 2500
+            }
+        },
+        {
+            name: 'lz6',
+            coordinates: [-37.827394, 145.040503],
+            properties: {
+                size: 2350
+            }
+        },
+        {
+            name: 'lz7',
+            coordinates: [-37.767711, 145.116720],
+            properties: {
+                size: 1100
+            }
+        },
+        {
+            name: 'lz8',
+            coordinates: [-37.829563, 145.129767],
+            properties: {
+                size: 1450
+            }
+        },
+        {
+            name: 'lz9',
+            coordinates: [-37.779108, 145.749365],
+            properties: {
+                size: 950
+            }
+        },
+        {
+            name: 'lz10',
+            coordinates: [-37.868059, 145.0714022],
+            properties: {
+                size: 2000
+            }
+        },
+        {
+            name: 'lz11',
+            coordinates: [-37.932565, 145.080328],
+            properties: {
+                size: 1700
+            }
+        },
+        {
+            name: 'lz12',
+            coordinates: [-37.873479, 145.1963717],
+            properties: {
+                size: 1200
+            }
         }
+    ];
         
-        iguanaLayer.addTo(map);
+    var iguanaDefault = {
+        color: '#fff'
+    };
+    
+    var iguanaAffordance = {
+        color: '#f00'
+    };
+    
         
-        map.on('click', function(e) {
-            var click = e.latlng;
-            
+//  Add locations of iguana landing zones and size appropriately.
+    var iguanaLayer = L.layerGroup();
+        
+    for (var i = 0; i < iguanaZones.length; i++) {
+        var zoneCircles = L.circle(iguanaZones[i].coordinates,iguanaZones[i].properties.size,iguanaDefault);
+        iguanaLayer.addLayer(zoneCircles);
+    }
+        
+    iguanaLayer.addTo(map);
+        
+    var markerLayer = L.layerGroup();
+
+    map.on('click', function(e) {
+        
+        function testDistance(pos) {
+            var distArray = [];
             iguanaLayer.eachLayer(function (layer) {
-                var dist = click.distanceTo(layer.getLatLng()) - layer.getRadius();
-                console.log(dist);
+                var dist = pos.distanceTo(layer.getLatLng()) - layer.getRadius();
+                distArray.push(dist);
                 if (dist <= 0) {
-                    layer.setStyle( {color: '#ff0000'} );
+                    layer.setStyle(iguanaAffordance);
+                }
+                else {
+                    layer.setStyle(iguanaDefault);
                 }
             });
+            return distArray;
+        }
         
-        console.log(map.getBounds());
-            
+        markerLayer.eachLayer(function (layer) {
+            var array = testDistance(layer.getLatLng());
+            array.sort(function(a, b){return a-b});
+            if (array[0] <= 0) markerLayer.removeLayer(layer);
         });
         
+        var click = e.latlng;
+        
+        marker = new L.marker(click, {
+            draggable:true
+        });
+        
+        markerLayer.addLayer(marker).addTo(map);
+        
+        testDistance(click);
+        
+        marker.on('dragend',function(ev){
+            var newPos = ev.target.getLatLng();
+            testDistance(newPos);
+        });
+        
+    }); 
+
     </script>
     
 </body>
