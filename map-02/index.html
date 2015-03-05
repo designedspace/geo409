@@ -79,6 +79,10 @@
             font-size: 0.75em;
             margin-top: 3em;
         }
+        p.legend{
+            text-align: center;
+            font-size: 0.75em;
+        }
         a {
             color: #777;
             font-weight:bold;
@@ -88,7 +92,11 @@
 
 <body>
     <header>
-        <h1>Hydroelectric and Natural Gas Power <br>Plants Near of Ann Arbor</h1><hr><br>
+        <h1>Hydroelectric and Natural Gas <br>Power Plants Near Ann Arbor</h1><hr><br>
+        <p class = 'legend'>
+            <img src="natGasIcon.png" style="vertical-align: middle;">&nbsp Hydroelectric &nbsp
+            <img src="hydroIcon.png" style="vertical-align: middle;">&nbsp Natural Gas
+        </p>
     </header>
 
     <div id='map'></div>
@@ -100,8 +108,9 @@
             <a href="https://github.com/designedspace/geo409" target="_blank">
             <img src="http://asap.github.io/flask-nyc/testing-selenium-jasmine/img/github.png" style="border-width:0;height:31px;margin-right:0.5em;" />
             <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank">
-            <img alt="Creative Commons License" style="margin-left:0.5em;" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></p>
-    </footer>
+            <img alt="Creative Commons License" style="margin-left:0.5em;" src="https://i.creativecommons.org/l/by/4.0/88x31.png" />
+        </p>
+        </footer>
         
         <!-- load external JS file here-->
     <script src='power-plants-assignment.js'></script>
@@ -172,12 +181,10 @@
             var featLatLng = L.latLng(feature.geometry.coordinates[1],feature.geometry.coordinates[0]); 
             
             var natGasColor = {
-                fillColor:'#f0f',
-//                radius: getRadius(Number(source['Natural Gas']))
+                fillColor:'#f0f'
             };
             var hydroColor = {
-                fillColor:'white',
-//                radius: getRadius(Number(source['Hydro']))
+                fillColor:'white'
             };
             
             console.log(source['Hydro']);
@@ -211,12 +218,6 @@
             });
         }
     }).addTo(map);
-        
-//    jsonLayer.eachLayer(function (layer) {  
-//        if(layer.feature.properties.source == 'Natural Gas') {    
-//            layer.setStyle({fillColor :'blue'}) 
-//        }
-//    });
     
     </script>
     
