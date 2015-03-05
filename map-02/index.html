@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8 />
+    <title>Geo409 Map 02</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: whitesmoke;
+            font-family: Lato, sans-serif;
+            color: #0D0000;
+        }
+        header {
+            padding: 6px 10%;
+        }
+        h1 {
+            display: inline-block;
+            margin-right: 20px;
+            color: #001323;
+        }
+        h2 {
+            display: inline-block;
+            color: #001323;
+        }
+        #map {
+            width: 100%;
+            height: 600px;
+            margin: 10px auto;
+        }
+        footer {
+            padding: 6px 10%;
+            width: 80%;
+        }
+        p {
+            font-size: 1em;
+            color: #001323;
+        }
+        /* Additional style rules go here! */
+        
+    </style>
+</head>
+
+<body>
+    <header>
+        <!-- add HTML here-->
+    </header>
+
+    <div id='map'></div>
+
+    <footer>
+        <!-- add HTML here-->
+    </footer>
+        
+        <!-- load external JS file here-->
+    <script src='power-plants-assignment.js'></script>
+    
+    <script>
+        
+    var map = L.map('map', {
+        center: [42.2814, -83.7483],
+        zoom: 6,
+    });
+        
+    var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',{
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+        subdomains: 'abcd',
+        minZoom: 6,
+        maxZoom: 18
+    });
+    map.addLayer(tiles);
+    
+    var city = {
+        name: "Ann Arbor",
+        properties: {
+            coordinates: [42.2814, -83.7483]
+        }
+    };
+        
+    L.circle(city.properties.coordinates,400000,{
+        color: 'white',
+        weight: 1,
+        fillOpacity: 0,
+        dashArray: [10,10]
+    }).addTo(map);
+    
+    var cityLatLng = L.latLng(city.properties.coordinates);
+        
+    plants.features.sort(function(a, b) {
+        return b.properties.capacity - a.properties.capacity;
+    });
+        
+    function getRadius(area) {
+        var radius = Math.sqrt(area/Math.PI);
+        return radius * 1.6;
+    }
+        
+    L.geoJson(plants,{
+        pointToLayer: function(feature,latlng) {
+            return L.circleMarker(latlng, {
+                color: 'white',
+                weight: 1,
+                fillOpacity: 0.5
+            });
+        },
+        
+            
+        filter: function(feature, layer) {
+            var featLatLng = L.latLng(feature.geometry.coordinates[1],feature.geometry.coordinates[0]);
+            var prop = feature.properties;
+
+            if (( prop.source['Natural Gas'] || prop.source['Hydro'] ) && prop.capacity < 500 && featLatLng.distanceTo(cityLatLng) < 400000) {
+                return feature;
+            }
+        },
+        
+        onEachFeature: function(feature, layer) {
+            var props = feature.properties;
+            var source = props.source;
+            var featLatLng = L.latLng(feature.geometry.coordinates[1],feature.geometry.coordinates[0]); 
+            
+            var natGasColor = {
+                fillColor:'#f0f',
+//                radius: getRadius(Number(source['Natural Gas']))
+            };
+            var hydroColor = {
+                fillColor:'white',
+//                radius: getRadius(Number(source['Hydro']))
+            };
+            
+            console.log(source['Hydro']);
+            
+            if (source['Natural Gas']) {
+                layer.setStyle(hydroColor).setRadius(getRadius(source['Natural Gas']));
+            }
+            
+            else if (source['Hydro']) {
+                layer.setStyle(natGasColor).setRadius(getRadius(source['Hydro']));
+            }
+            
+            var content = '<b>'+props.plant_name+'</b><br>'+props.capacity+' MW<br>';
+            for(var fuel in source){
+                content+='<b>'+fuel+'</b>: '+source[fuel].toLocaleString()+' MW<br>';
+            }
+            content+='This plant is <b>'+(featLatLng.distanceTo(cityLatLng)/1000).toLocaleString()+' km</b> from '+city.name;
+
+            layer.on('mouseover', function() {
+                layer.bindPopup(content).openPopup();
+                layer.setStyle({
+                    fillOpacity: 1
+                });
+            });
+
+            layer.on('mouseout', function() {
+                layer.closePopup();
+                layer.setStyle({
+                    fillOpacity: 0.5
+                });
+            });
+        }
+    }).addTo(map);
+        
+//    jsonLayer.eachLayer(function (layer) {  
+//        if(layer.feature.properties.source == 'Natural Gas') {    
+//            layer.setStyle({fillColor :'blue'}) 
+//        }
+//    });
+    
+    </script>
+    
+</body>
+
+</html>
