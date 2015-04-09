@@ -10,6 +10,7 @@
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.0/papaparse.min.js"></script>
     <script src="simple_statistics.js"></script>
+    <script src="d3.v3.min.js"></script>
 
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
     <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
@@ -108,12 +109,30 @@
             color: whitesmoke;
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
             border-radius: 5px;
-            text-align: right;
-/*            width:150px;*/
+            text-align: left;
         }
         
         .info h3 {
             margin:0;
+        }
+        
+        .line {
+            fill: none;
+            stroke: #FF00B4;
+            stroke-width: 1.5px;
+        }
+        
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: white;
+            stroke-width: 1;
+            shape-rendering: crispEdges;
+            color: white;
+        }
+        
+        .axis text {
+            fill: white;   
         }
         
     </style>
@@ -121,11 +140,11 @@
 
 <body>
     <div id='map'></div>
-    <h1>Unemployment in Kentucky Counties | <i>2001-2013</i></h1>
+    <h1>Unemployment in Kentucky Counties | 2001-2013</h1>
         <div id="ui-controls">
-            <label><span class="min">2001</span><span class="max">2013</span>
-                <input type="range" min="2001", max="2013", 
-                        value="2001", step="1" class="year-slider"></input>
+            <label><span class="min">2000</span><span class="max">2013</span>
+                <input type="range" min="2000", max="2013", 
+                        value="2000", step="1" class="year-slider"></input>
             </label>
     </div>
     
@@ -166,7 +185,7 @@
         };
         
         var countyGeom,
-        year = "2001";
+        year = "2000";
 
         // AJAX requests to load data files
         
@@ -377,15 +396,77 @@
             var props = layer.feature.properties;
             
             //create info box HTML content, establishing a header...
-            var html = "<h3>" + props["NAME"] + " County</h3>";
+            var header = '<h3>' + props["NAME"] + ' County (% Unemployment 2000-2013)</h3>';
+            $(".info").html(header);
             
-            for (var i = 2001; i <= 2013; i++) {
-                html += "<br>" + i + ": <b>" + props[String(i)] + "</b>";
+            var m = {top: 10, right: 20, bottom: 20, left: 30},
+            w = 400 - m.left - m.right,
+            h = 200 - m.top - m.bottom;
+            
+            var y = d3.scale.linear()
+                .range([h,0]);
+            
+            var x = d3.scale.linear()
+                .range([0, w]);
+            
+            var valueLine = d3.svg.line()
+                .x(function(d) { return x(d.year); })
+                .y(function(d) { return y(d.unemployment); })
+                .interpolate("linear");
+            
+            var svg = d3.select(".info")
+                .append("svg")
+                    .attr("width", w + m.left + m.right)
+                    .attr("height", h + m.top + m.bottom + 30)
+                .append("g")
+                    .attr("transform", "translate(" + m.left + "," + m.top + ")");
+            
+            var data = [];
+            var unemMin = Number.POSITIVE_INFINITY;
+            var unemMax = Number.NEGATIVE_INFINITY;
+            
+            for (var i = 2000; i <= 2013; i++) {
+                data.push({year: i, unemployment: Number(props[String(i)])});
+                
+                var unemTmp = Number(props[String(i)]);
+                if (unemTmp < unemMin) unemMin = unemTmp;
+                if (unemTmp > unemMax) unemMax = unemTmp;
             }
-        
-            // insert the html content into the divs of class info
-            $(".info").html(html);
-               
+            
+            
+            
+            var xAxis = d3.svg.axis().scale(x)
+                .tickFormat(d3.format("d"))
+                .orient("bottom").ticks(data.length);
+            
+            var yAxis = d3.svg.axis().scale(y)
+                .orient("left").ticks(5);
+            
+            x.domain([2000, 2013]);
+            y.domain([unemMin,unemMax]);
+            
+            svg.append("path")
+                .attr("d",valueLine(data))
+                .attr("class", "line");
+            
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + h + ")")
+                .call(xAxis)
+                .selectAll("text")  
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                .attr("transform", function(d) {
+                    return "rotate(-65)" 
+                    });
+            
+            // Add the Y Axis
+            svg.append("g")
+                .attr("class", "y axis")
+                .attr("outerTickSize", 0)
+                .call(yAxis);
+
         }
         
         $(".year-slider")
