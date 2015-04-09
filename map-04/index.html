@@ -232,31 +232,32 @@
                    }  
                 }
             }
-            console.log(counties);
             drawLegend();
             drawMap();
             drawSlider();
             drawInfo();
         }
         
+        // comment, comment, comment
         function drawMap() {
             var breaks = getClassBreaks();
-            
+            //do the thing with the thing
             countyGeom.eachLayer(function(layer) {
-            
+                //and the thing with the other thing
                 var props = layer.feature.properties;
-                
+                //when you thing, thing the thingy-thing
                 layer.setStyle({
                     fillColor: getColor(props[year], breaks)
                 }); 
+                //thing 1, thing 2, thing red, thing blue
+                var content = '<b>' + props["NAME"] + ' County</b><br>' + year + ': <b> ' + props[year] + '%</b>';
                 
-                            var content = '<b>' + props["NAME"] + ' County</b><br>' + year + ': <b> ' + props[year] + '%</b>';
-
+                //underwater basketweaving
                 layer.bindPopup(content);
-            
-            layer.on('mouseover', function() {
+                //overheating, undereating
+                layer.on('mouseover', function() {
                     updateInfo(this);
-                });
+                });;
             });
             
             //on mouseover, show the info box
@@ -268,7 +269,7 @@
             countyGeom.on('mouseout', function() {
                 $(".info").hide();    
             });
-        
+            //Wilhelm scream, tall i-beam
             updateLegend(breaks);
             
         }
@@ -335,9 +336,10 @@
         
         // function to update the legend
         function updateLegend(breaks) {
-            
+            //select legend class and fill with HTML title
             var legend = $('.legend').html("<h3>% unemployment in " + year + "</h3><ul>");
             
+            //for each class, append colored <span> and range
             for (var i = 0; i < breaks.length-1; i++) {
                 var color = getColor(breaks[i + 1], breaks);
                 legend.append('<li><span style="background:' + color + '"></span> ' +
@@ -346,7 +348,8 @@
             }
             legend.append("</ul>");
         }
-
+        
+        // Function to draw the slider.
         function drawSlider() {
         
         // create a Leaflet control object and store a reference to it in a variable
@@ -375,6 +378,7 @@
             
         }
         
+        //Draw info box
         function drawInfo() {
             // create a leaflet control in the top right of the screen
             var info = L.control({position: 'bottomright'});
@@ -391,6 +395,8 @@
             $(".info").hide();
         }
         
+        //Updates and generates content for info box, including a title and a D3
+        //chart displaying unemployment rate 2000-2013.
         function updateInfo(layer) {
             //create 'shortcut' variable to layer properties
             var props = layer.feature.properties;
@@ -399,21 +405,26 @@
             var header = '<h3>' + props["NAME"] + ' County (% Unemployment 2000-2013)</h3>';
             $(".info").html(header);
             
+            //Set size variables
             var m = {top: 10, right: 20, bottom: 20, left: 30},
             w = 400 - m.left - m.right,
             h = 200 - m.top - m.bottom;
             
+            //Y-axis scale method
             var y = d3.scale.linear()
                 .range([h,0]);
             
+            //X-axis scale method
             var x = d3.scale.linear()
                 .range([0, w]);
             
+            //path constructor for line grapht data
             var valueLine = d3.svg.line()
                 .x(function(d) { return x(d.year); })
                 .y(function(d) { return y(d.unemployment); })
                 .interpolate("linear");
             
+            //select div of class info and append an svg to contain line graph
             var svg = d3.select(".info")
                 .append("svg")
                     .attr("width", w + m.left + m.right)
@@ -421,39 +432,53 @@
                 .append("g")
                     .attr("transform", "translate(" + m.left + "," + m.top + ")");
             
+            //create empty data variable that will contain annual unemployment data
+            //for a given feature.
             var data = [];
             var unemMin = Number.POSITIVE_INFINITY;
             var unemMax = Number.NEGATIVE_INFINITY;
             
+            // for each year, add year and unemployment rate as properties of a data
+            // variable.
             for (var i = 2000; i <= 2013; i++) {
                 data.push({year: i, unemployment: Number(props[String(i)])});
                 
+                // locate maximum and minimum unemployment values with which to set
+                // Y-axis scale domain.
                 var unemTmp = Number(props[String(i)]);
                 if (unemTmp < unemMin) unemMin = unemTmp;
                 if (unemTmp > unemMax) unemMax = unemTmp;
             }
             
-            
-            
+            //Declare X axis constructor
             var xAxis = d3.svg.axis().scale(x)
+                //Format tick labels as dates (i.e., no comma-separation)
                 .tickFormat(d3.format("d"))
-                .orient("bottom").ticks(data.length);
+                .orient("bottom")
+                //Display every year.
+                .ticks(data.length);
             
+            //Declare Y axis constructor
             var yAxis = d3.svg.axis().scale(y)
-                .orient("left").ticks(5);
+                .orient("left")
+                .ticks(5);
             
+            //Set X and Y axis scale domains
             x.domain([2000, 2013]);
             y.domain([unemMin,unemMax]);
             
+            //Draw line graph
             svg.append("path")
                 .attr("d",valueLine(data))
                 .attr("class", "line");
             
+            //append X axis
             svg.append("g")
                 .attr("class", "x axis")
                 .attr("transform", "translate(0," + h + ")")
                 .call(xAxis)
                 .selectAll("text")  
+                // Rotate text 65 degrees
                 .style("text-anchor", "end")
                 .attr("dx", "-.8em")
                 .attr("dy", ".15em")
@@ -461,7 +486,7 @@
                     return "rotate(-65)" 
                     });
             
-            // Add the Y Axis
+            // Append Y Axis
             svg.append("g")
                 .attr("class", "y axis")
                 .attr("outerTickSize", 0)
@@ -469,8 +494,11 @@
 
         }
         
+        //select element class year-slider
         $(".year-slider")
+        //when the input value changes...
         .on('input change', function() {
+            //set year equal to slider value and redraw the map.
             year = $(this).val();
             drawMap();
         });
